@@ -35,7 +35,7 @@ public class Cases {
 			System.out.println("Fetching Questions...");
 			System.out.println("");
 			Collections.shuffle(QuestionsDatabase.updatedDatabase);
-			goToLoop(0);
+			mainQuizPortion();
 		}
 
 		try {
@@ -99,59 +99,58 @@ public class Cases {
 			ConsoleOperation.displayMenu();
 	}
 
-	public void goToLoop(int index) {
-		for (int i = index; i < 5; i++) {
+	public void mainQuizPortion() {
+
+		for (int i = 0; i < 5; i++) {
 			String question = QuestionsDatabase.updatedDatabase.get(i).getQuestion();
 			String optionA = QuestionsDatabase.updatedDatabase.get(i).getOptionA();
 			String optionB = QuestionsDatabase.updatedDatabase.get(i).getOptionB();
 			String optionC = QuestionsDatabase.updatedDatabase.get(i).getOptionC();
 			String optionD = QuestionsDatabase.updatedDatabase.get(i).getOptionD();
-
+		
+			System.out.println("");
 			System.out.println(question);
-			System.out.print("A. " + optionA + "\t\t\t\t");
-			System.out.println("B. " + optionB);
-			System.out.print("C. " + optionC + "\t\t\t\t");
-			System.out.println("D. " + optionD);
-			checkCorrect(QuestionsDatabase.updatedDatabase.get(i).getCorrectOption(), i);
+			System.out.printf("A. %-40s", optionA);
+			System.out.printf("B. %s %n", optionB);
+			System.out.printf("C. %-40s", optionC);
+			System.out.printf("D. %s %n", optionD);
 
-		}
+			String input = sc.nextLine();
+			char[] appropriateKeys = { 'A', 'B', 'C', 'D' };
+			boolean isValid = false;
 
-	}
+			if (input.length() != 0) {
+				char inputtedKey = Character.toUpperCase(input.charAt(0));
+				for (char validKey : appropriateKeys) {
 
-	public void checkCorrect(char correct, int index) {
-		String input = sc.nextLine();
-		char[] appropriateKeys = { 'A', 'B', 'C', 'D' };
-		boolean isValid = false;
+					if (inputtedKey == validKey) {
+						isValid = true;
+						break;
 
-		if (input.length() != 0) {
-			char inputtedKey = Character.toUpperCase(input.charAt(0));
-			for (char validKey : appropriateKeys) {
-
-				if (inputtedKey == validKey) {
-					isValid = true;
-					break;
-
+					}
 				}
-			}
-			if (isValid) {
-				if (inputtedKey == QuestionsDatabase.updatedDatabase.get(index).getCorrectOption()) {
-					System.out.println("Correct!");
-					currentPlayerScore += 5;
+				if (isValid) {
+					char correctOption = QuestionsDatabase.updatedDatabase.get(i).getCorrectOption();
+					if (inputtedKey == correctOption) {
+						System.out.println("Correct!");
+						currentPlayerScore += 5;
 
+					} else {
+						System.out.println("Wrong! The right option is " + correctOption);
+					}
 				} else {
-					System.out.println("Wrong! The right option is "
-							+ QuestionsDatabase.updatedDatabase.get(index).getCorrectOption());
-				}
-			} else {
-				System.out.println("Enter the appropriate keys i.e. either A,B,C,D");
-				goToLoop(index);
+					System.out.println("Enter the appropriate keys i.e. either A,B,C,D");
+					i--;
 
+				}
+
+			} else {
+				System.out.println("Don't press enter without selecting an option!");
+				i--;
 			}
 
-		} else {
-			System.out.println("Don't press enter without selecting an option!");
-			goToLoop(index);
 		}
+
 	}
 
 	public void viewHighScore() throws IOException {
